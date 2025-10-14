@@ -1,3 +1,7 @@
+<?php
+require_once 'session.php';
+$user = getCurrentUser();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -27,6 +31,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#accueil">Accueil</a>
                     </li>
+                    <?php if (isLoggedIn()): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="#galerie">Galerie</a>
                     </li>
@@ -36,13 +41,38 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#tarifs">Tarifs</a>
                     </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                 </ul>
-                <button class="btn btn-outline-light ms-3" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    <i class="bi bi-person"></i> Se connecter
-                </button>
+                <?php if (isLoggedIn()): ?>
+                    <div class="dropdown ms-3">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <?php echo htmlspecialchars($user['username']); ?>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><span class="dropdown-item-text"><strong>Rôle:</strong> <?php echo ucfirst($user['role']); ?></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <?php if (isAdmin()): ?>
+                                <li><a class="dropdown-item" href="admin_dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard Admin</a></li>
+                            <?php elseif (isPhotographe()): ?>
+                                <li><a class="dropdown-item" href="photographe_dashboard.php"><i class="bi bi-camera"></i> Mes Photos</a></li>
+                            <?php elseif (isClient()): ?>
+                                <li><a class="dropdown-item" href="client_dashboard.php"><i class="bi bi-bag"></i> Mes Achats</a></li>
+                            <?php endif; ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="logout.php?logout=1"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+                        </ul>
+                    </div>
+                <?php else: ?>
+                    <a href="register.php" class="btn btn-outline-light ms-3">
+                        <i class="bi bi-person-plus"></i> S'inscrire
+                    </a>
+                    <a href="login.php" class="btn btn-primary ms-2">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
@@ -56,10 +86,26 @@
                     <img src="images/logo.svg" alt="PhotoFor You" class="hero-logo mb-4 animate-fade-in">
                     <h1 class="display-4 text-white mb-3 animate-fade-in">PhotoFor You</h1>
                     <p class="lead text-white mb-4 animate-fade-in">Que vous soyez un particulier ou une entreprise, nous immortalisons vos moments précieux</p>
-                    <p class="text-white-50 mb-4 animate-fade-in">Découvrez nos images et sublimez votre story Snapchat ou feed Instagram grâce à notre photographe</p>
-                    <button class="btn btn-primary btn-lg animate-fade-in" data-bs-toggle="modal" data-bs-target="#discoverModal">
-                        <i class="bi bi-play-circle me-2"></i> Découvrir
-                    </button>
+                    
+                    <?php if (!isLoggedIn()): ?>
+                        <div class="alert alert-light d-inline-block animate-fade-in mb-4" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Connectez-vous</strong> pour accéder à notre galerie complète et nos tarifs !
+                        </div>
+                    <?php else: ?>
+                        <p class="text-white-50 mb-4 animate-fade-in">Découvrez nos images et sublimez votre story Snapchat ou feed Instagram grâce à notre photographe</p>
+                    <?php endif; ?>
+                    
+                    <?php if (!isLoggedIn()): ?>
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a href="register.php" class="btn btn-primary btn-lg animate-fade-in">
+                                <i class="bi bi-person-plus me-2"></i> S'inscrire gratuitement
+                            </a>
+                            <a href="login.php" class="btn btn-outline-light btn-lg animate-fade-in">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Se connecter
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -68,6 +114,7 @@
         </div>
     </section>
 
+    <?php if (isLoggedIn()): ?>
     <!-- Mini Gallery Preview -->
     <section class="mini-gallery py-5">
         <div class="container">
@@ -308,6 +355,8 @@
             </div>
         </div>
     </section>
+
+    <?php endif; // Fin de isLoggedIn() pour mini-gallery, galerie, formules, tarifs ?>
 
     <!-- Footer -->
     <footer class="footer bg-dark text-white py-5">
