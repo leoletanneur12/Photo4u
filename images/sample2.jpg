@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Portrait silhouette -->
+  <ellipse cx="400" cy="450" rx="200" ry="150" fill="#2c3e50" opacity="0.3"/>
+  
+  <!-- Head -->
+  <circle cx="400" cy="250" r="100" fill="#f4a261"/>
+  
+  <!-- Body -->
+  <rect x="300" y="350" width="200" height="250" rx="30" fill="#e76f51"/>
+  
+  <!-- Camera icon -->
+  <g transform="translate(100, 80)">
+    <rect x="0" y="0" width="120" height="80" rx="10" fill="white" opacity="0.9"/>
+    <circle cx="60" cy="40" r="25" fill="#e74c3c"/>
+    <circle cx="95" cy="15" r="8" fill="#3498db"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="400" y="550" font-family="Arial" font-size="48" font-weight="bold" text-anchor="middle" fill="white">Portrait</text>
+</svg>
