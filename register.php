@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $role = isset($_POST['role']) && in_array($_POST['role'], ['client', 'photographe']) ? $_POST['role'] : 'client';
     
     // Validation
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
@@ -30,10 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             if ($stmt->fetch()) {
                 $error = "Ce nom d'utilisateur ou cet email est déjà utilisé.";
             } else {
-                // Créer le compte (par défaut en tant que client)
+                // Créer le compte avec le rôle choisi
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'client')");
-                $stmt->execute([$username, $email, $hashed_password]);
+                $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$username, $email, $hashed_password, $role]);
                 
                 $success = "Compte créé avec succès ! Vous pouvez maintenant vous connecter.";
             }
@@ -81,6 +82,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                         <?php endif; ?>
 
                         <form method="POST" action="">
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-person-badge me-2"></i>Je m'inscris en tant que</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="role" id="role_client" value="client" checked>
+                                    <label class="btn btn-outline-primary" for="role_client">
+                                        <i class="bi bi-bag-heart"></i> Acheteur / Client
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="role" id="role_photographe" value="photographe">
+                                    <label class="btn btn-outline-success" for="role_photographe">
+                                        <i class="bi bi-camera"></i> Photographe
+                                    </label>
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    <strong>Acheteur :</strong> Pour acheter et télécharger des photos<br>
+                                    <strong>Photographe :</strong> Pour vendre vos propres photos
+                                </small>
+                            </div>
                             <div class="mb-3">
                                 <label for="username" class="form-label">Nom d'utilisateur</label>
                                 <input type="text" class="form-control" id="username" name="username" required 

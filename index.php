@@ -114,42 +114,68 @@ $user = getCurrentUser();
         </div>
     </section>
 
-    <?php if (isLoggedIn()): ?>
-    <!-- Mini Gallery Preview -->
+    <!-- Mini Gallery Preview - VISIBLE POUR TOUS (visiteurs + connectés) -->
     <section class="mini-gallery py-5">
         <div class="container">
             <div class="text-center mb-4">
                 <h2 class="h3 mb-2">Découvrez nos catégories de photo</h2>
                 <p class="text-muted mb-0">Paysages, portraits et événements — explorez notre sélection</p>
+                <?php if (!isLoggedIn()): ?>
+                    <div class="alert alert-info mt-3 d-inline-block">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Aperçu limité</strong> — Inscrivez-vous pour accéder à toute la galerie !
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="gallery-card">
+                    <div class="gallery-card <?php echo !isLoggedIn() ? 'preview-mode' : ''; ?>">
                         <img src="images/paysage2.jpg" alt="Paysage" class="img-fluid rounded">
                         <div class="gallery-overlay">
                             <h5>Paysages</h5>
+                            <?php if (!isLoggedIn()): ?>
+                                <p class="small mb-2"><i class="bi bi-lock-fill"></i> Connectez-vous pour voir</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="gallery-card">
+                    <div class="gallery-card <?php echo !isLoggedIn() ? 'preview-mode' : ''; ?>">
                         <img src="images/portrait2.jpg" alt="Portrait" class="img-fluid rounded">
                         <div class="gallery-overlay">
                             <h5>Portraits</h5>
+                            <?php if (!isLoggedIn()): ?>
+                                <p class="small mb-2"><i class="bi bi-lock-fill"></i> Connectez-vous pour voir</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="gallery-card">
+                    <div class="gallery-card <?php echo !isLoggedIn() ? 'preview-mode' : ''; ?>">
                         <img src="images/evenement2.jpg" alt="Événement" class="img-fluid rounded">
                         <div class="gallery-overlay">
                             <h5>Événements</h5>
+                            <?php if (!isLoggedIn()): ?>
+                                <p class="small mb-2"><i class="bi bi-lock-fill"></i> Connectez-vous pour voir</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
+            <?php if (!isLoggedIn()): ?>
+                <div class="text-center mt-4">
+                    <a href="register.php" class="btn btn-primary btn-lg me-2">
+                        <i class="bi bi-person-plus"></i> S'inscrire pour voir plus
+                    </a>
+                    <a href="login.php" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
+
+    <?php if (isLoggedIn()): ?>
 
     <!-- Galerie complète -->
     <section id="galerie" class="py-5 bg-white">
@@ -269,11 +295,20 @@ $user = getCurrentUser();
         </div>
     </section>
 
-    <!-- Tarifs Section -->
+    <?php endif; // Fin de isLoggedIn() pour formules ?>
+
+    <!-- Tarifs Section - VISIBLE POUR TOUS -->
     <section id="tarifs" class="tarifs-section py-5 bg-light">
         <div class="container">
             <h2 class="text-center mb-3">Tarifs</h2>
-            <p class="text-center text-muted mb-5">Une tarification flexible</p>
+            <p class="text-center text-muted mb-5">Une tarification flexible pour tous vos besoins</p>
+            
+            <?php if (!isLoggedIn()): ?>
+                <div class="alert alert-primary text-center mb-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Inscrivez-vous</strong> pour profiter de nos tarifs et acheter vos photos !
+                </div>
+            <?php endif; ?>
 
             <!-- Première rangée de tarifs -->
             <div class="row g-4 mb-4">
@@ -355,8 +390,6 @@ $user = getCurrentUser();
             </div>
         </div>
     </section>
-
-    <?php endif; // Fin de isLoggedIn() pour mini-gallery, galerie, formules, tarifs ?>
 
     <!-- Footer -->
     <footer class="footer bg-dark text-white py-5">

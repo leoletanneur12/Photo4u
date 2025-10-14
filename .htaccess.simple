@@ -1,0 +1,12 @@
+# Photo4u - Configuration Apache simplifiée
+
+# Empêcher l'accès direct aux fichiers sensibles
+<FilesMatch "^(config\.php|session\.php)$">
+    Require all denied
+</FilesMatch>
+
+# Désactiver le listing des répertoires
+Options -Indexes
+
+# Page d'erreur personnalisée
+ErrorDocument 404 /Photo4u/index.php
