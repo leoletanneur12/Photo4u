@@ -95,7 +95,7 @@ try {
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
-                <img src="images/logo-photo4u.svg" alt="Photo4u Logo" height="40">
+                <img src="images/logo-photo4u.png" alt="Photo4u Logo" height="40">
             </a>
             <div class="ms-auto d-flex align-items-center gap-3">
                 <span class="text-white">

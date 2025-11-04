@@ -214,7 +214,7 @@ try {
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="images/logo-photo4u.svg" alt="Photo4u Logo" height="50">
+                <img src="images/logo-photo4u.png" alt="Photo4u Logo" height="50">
             </a>
             <span class="navbar-text text-white me-auto ms-3">
                 <i class="bi bi-camera-fill me-2"></i>Espace Photographe

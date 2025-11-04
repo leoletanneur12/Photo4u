@@ -229,7 +229,7 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="images/logo-photo4u.svg" alt="Photo4u Logo" height="50">
+                <img src="images/logo-photo4u.png" alt="Photo4u Logo" height="50">
             </a>
             <span class="navbar-text text-white me-auto ms-3">
                 <i class="bi bi-bag-heart-fill me-2"></i>Espace Client
@@ -294,7 +294,6 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
         </div>
 
         <!-- Onglets -->
-        <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <a class="nav-link <?php echo $activeTab === 'browse' ? 'active' : ''; ?>" href="?tab=browse">
                     <i class="bi bi-shop"></i> Parcourir les photos

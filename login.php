@@ -86,7 +86,7 @@ if (isLoggedIn()) {
                 <div class="card shadow">
                     <div class="card-body p-5">
                         <div class="text-center mb-4">
-                            <img src="images/logo-photo4u.svg" alt="Photo4u Logo" height="80" class="mb-3">
+                            <img src="images/logo-photo4u.png" alt="Photo4u Logo" height="80" class="mb-3">
                             <h2 class="h3">Connexion</h2>
                             <p class="text-muted">Accédez à votre espace personnel</p>
                         </div>

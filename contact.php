@@ -45,7 +45,7 @@ $user = getCurrentUser();
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="images/logo-photo4u.svg" alt="Photo4u Logo" height="50">
+                <img src="images/logo-photo4u.png" alt="Photo4u Logo" height="50">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
