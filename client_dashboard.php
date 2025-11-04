@@ -22,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recharge_credits'])) 
         try {
             $pdo->beginTransaction();
             
+            // Calculer les crédits (1€ = 100 crédits)
+            $credits = $amount * 100;
+            
             // Mettre à jour les crédits
             $stmt = $pdo->prepare("UPDATE users SET credits = credits + ? WHERE id = ?");
             $stmt->execute([$amount, $user['id']]);
@@ -33,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recharge_credits'])) 
             
             // Enregistrer la transaction
             $stmt = $pdo->prepare("INSERT INTO credit_transactions (user_id, amount, type, description, balance_after) VALUES (?, ?, 'recharge', ?, ?)");
-            $stmt->execute([$user['id'], $amount, "Recharge de crédits", $new_balance]);
+            $stmt->execute([$user['id'], $amount, "Recharge de " . number_format($credits, 0) . " crédits", $new_balance]);
             
             $pdo->commit();
             $user['credits'] = $new_balance; // Mettre à jour en session
             $_SESSION['credits'] = (float) $new_balance;
-            $message = "Recharge de " . number_format($amount, 2) . "€ effectuée avec succès !";
+            $message = "✅ Recharge réussie ! Vous avez reçu " . number_format($credits, 0) . " crédits pour " . number_format($amount, 2) . "€";
         } catch(PDOException $e) {
             $pdo->rollBack();
             $error = "Erreur lors de la recharge : " . $e->getMessage();
@@ -444,11 +447,11 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <p class="text-center text-muted mb-4">Choisissez le montant de crédits à ajouter à votre compte</p>
+                    <p class="text-center text-muted mb-4">Choisissez le pack de crédits à acheter</p>
                     
                     <form method="POST" action="" id="rechargeForm">
                         <div class="row g-3">
-                            <!-- 5€ -->
+                            <!-- 5€ = 500 crédits -->
                             <div class="col-md-4">
                                 <label class="credit-pack-card">
                                     <input type="radio" name="recharge_amount" value="5" required>
@@ -456,13 +459,14 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon">
                                             <i class="bi bi-coin"></i>
                                         </div>
-                                        <div class="credit-amount">5€</div>
-                                        <div class="credit-desc">Débutant</div>
+                                        <div class="credit-amount">500 <i class="bi bi-trophy-fill" style="font-size: 1rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price">5.00€</div>
+                                        <div class="credit-desc">Pack Débutant</div>
                                     </div>
                                 </label>
                             </div>
                             
-                            <!-- 10€ -->
+                            <!-- 10€ = 1000 crédits -->
                             <div class="col-md-4">
                                 <label class="credit-pack-card">
                                     <input type="radio" name="recharge_amount" value="10" required>
@@ -470,13 +474,14 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon">
                                             <i class="bi bi-cash-coin"></i>
                                         </div>
-                                        <div class="credit-amount">10€</div>
-                                        <div class="credit-desc">Standard</div>
+                                        <div class="credit-amount">1000 <i class="bi bi-trophy-fill" style="font-size: 1rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price">10.00€</div>
+                                        <div class="credit-desc">Pack Standard</div>
                                     </div>
                                 </label>
                             </div>
                             
-                            <!-- 25€ -->
+                            <!-- 25€ = 2500 crédits -->
                             <div class="col-md-4">
                                 <label class="credit-pack-card credit-popular">
                                     <input type="radio" name="recharge_amount" value="25" required>
@@ -485,13 +490,14 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon">
                                             <i class="bi bi-gem"></i>
                                         </div>
-                                        <div class="credit-amount">25€</div>
-                                        <div class="credit-desc">Populaire</div>
+                                        <div class="credit-amount">2500 <i class="bi bi-trophy-fill" style="font-size: 1rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price">25.00€</div>
+                                        <div class="credit-desc">Pack Populaire</div>
                                     </div>
                                 </label>
                             </div>
                             
-                            <!-- 35€ -->
+                            <!-- 35€ = 3500 crédits -->
                             <div class="col-md-4">
                                 <label class="credit-pack-card">
                                     <input type="radio" name="recharge_amount" value="35" required>
@@ -499,13 +505,14 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon">
                                             <i class="bi bi-star-fill"></i>
                                         </div>
-                                        <div class="credit-amount">35€</div>
-                                        <div class="credit-desc">Avancé</div>
+                                        <div class="credit-amount">3500 <i class="bi bi-trophy-fill" style="font-size: 1rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price">35.00€</div>
+                                        <div class="credit-desc">Pack Avancé</div>
                                     </div>
                                 </label>
                             </div>
                             
-                            <!-- 50€ -->
+                            <!-- 50€ = 5000 crédits -->
                             <div class="col-md-4">
                                 <label class="credit-pack-card">
                                     <input type="radio" name="recharge_amount" value="50" required>
@@ -513,13 +520,14 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon">
                                             <i class="bi bi-trophy-fill"></i>
                                         </div>
-                                        <div class="credit-amount">50€</div>
-                                        <div class="credit-desc">Pro</div>
+                                        <div class="credit-amount">5000 <i class="bi bi-trophy-fill" style="font-size: 1rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price">50.00€</div>
+                                        <div class="credit-desc">Pack Pro</div>
                                     </div>
                                 </label>
                             </div>
                             
-                            <!-- 75€ -->
+                            <!-- 75€ = 7500 crédits -->
                             <div class="col-md-4">
                                 <label class="credit-pack-card">
                                     <input type="radio" name="recharge_amount" value="75" required>
@@ -527,13 +535,14 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon">
                                             <i class="bi bi-lightning-charge-fill"></i>
                                         </div>
-                                        <div class="credit-amount">75€</div>
-                                        <div class="credit-desc">Expert</div>
+                                        <div class="credit-amount">7500 <i class="bi bi-trophy-fill" style="font-size: 1rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price">75.00€</div>
+                                        <div class="credit-desc">Pack Expert</div>
                                     </div>
                                 </label>
                             </div>
                             
-                            <!-- 100€ -->
+                            <!-- 100€ = 10000 crédits -->
                             <div class="col-md-12">
                                 <label class="credit-pack-card credit-premium">
                                     <input type="radio" name="recharge_amount" value="100" required>
@@ -542,7 +551,8 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                         <div class="credit-icon-large">
                                             <i class="bi bi-award-fill"></i>
                                         </div>
-                                        <div class="credit-amount-large">100€</div>
+                                        <div class="credit-amount-large">10000 <i class="bi bi-trophy-fill" style="font-size: 2rem; color: #ffc107;"></i></div>
+                                        <div class="credit-price-large">100.00€</div>
                                         <div class="credit-desc-large">Pack Premium - Le meilleur rapport qualité/prix</div>
                                     </div>
                                 </label>
@@ -615,9 +625,20 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
         }
         
         .credit-amount {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             margin-bottom: 5px;
+        }
+        
+        .credit-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 5px;
+        }
+        
+        .credit-pack-card input[type="radio"]:checked + .credit-pack-content .credit-price {
+            color: #fff;
         }
         
         .credit-desc {
@@ -677,8 +698,19 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
         }
         
         .credit-amount-large {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
+        }
+        
+        .credit-price-large {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 5px;
+        }
+        
+        .credit-pack-card input[type="radio"]:checked + .credit-pack-content-large .credit-price-large {
+            color: #fff;
         }
         
         .credit-desc-large {
