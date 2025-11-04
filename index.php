@@ -318,14 +318,16 @@ $user = getCurrentUser();
                             <h3>Essai</h3>
                             <div class="price">
                                 <span class="amount">0€</span>
-                                <span class="period">/ mois</span>
+                                <span class="period">/ gratuit</span>
                             </div>
                         </div>
                         <ul class="pricing-features">
-                            <li><i class="bi bi-check-circle-fill text-success"></i> 5 photos offertes</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Usage privé</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> 5 crédits offerts</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Aperçu flou de la galerie</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Usage personnel uniquement</li>
+                            <li><i class="bi bi-x-circle-fill text-danger"></i> Pas de support prioritaire</li>
                         </ul>
-                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#essaiModal">Faire un essai</button>
+                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#essaiModal">Commencer l'essai</button>
                     </div>
                 </div>
 
@@ -334,18 +336,20 @@ $user = getCurrentUser();
                     <div class="pricing-card pricing-popular">
                         <div class="badge-popular">Populaire</div>
                         <div class="pricing-header">
-                            <h3>Formule Découverte</h3>
+                            <h3>Découverte</h3>
                             <div class="price">
-                                <span class="amount">9€</span>
+                                <span class="amount">15€</span>
                                 <span class="period">/ mois</span>
                             </div>
                         </div>
                         <ul class="pricing-features">
-                            <li><i class="bi bi-check-circle-fill text-success"></i> 10 crédits</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> 30 % de remise sur vos photos</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Accès à toute la galerie</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> 20 crédits inclus</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> 15% de réduction sur les photos</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Accès illimité à la galerie</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Téléchargement haute résolution</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Support par email</li>
                         </ul>
-                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#checkoutModal">Acheter</button>
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#checkoutModal">S'abonner</button>
                     </div>
                 </div>
 
@@ -353,18 +357,21 @@ $user = getCurrentUser();
                 <div class="col-lg-4">
                     <div class="pricing-card">
                         <div class="pricing-header">
-                            <h3>Formule pro</h3>
+                            <h3>Pro</h3>
                             <div class="price">
-                                <span class="amount">19€</span>
+                                <span class="amount">39€</span>
                                 <span class="period">/ mois</span>
                             </div>
                         </div>
                         <ul class="pricing-features">
-                            <li><i class="bi bi-check-circle-fill text-success"></i> 20 crédits</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> 30 % de remise sur vos photos</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Accès à toute la galerie</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> 50 crédits inclus</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> 30% de réduction sur les photos</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Accès illimité + nouveautés</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Téléchargement HD + RAW</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Usage commercial autorisé</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Support prioritaire 24/7</li>
                         </ul>
-                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#checkoutModal">Acheter</button>
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#checkoutModal">S'abonner Pro</button>
                     </div>
                 </div>
             </div>
