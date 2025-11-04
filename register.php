@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                         <!-- Sidebar gauche avec avantages -->
                         <div class="col-md-5 register-sidebar d-none d-md-flex">
                             <div>
-                                <img src="images/logo.svg" alt="Photo4u" style="max-width: 150px; margin-bottom: 30px; filter: brightness(0) invert(1);">
+                                <img src="images/logo-photo4u.png" alt="Photo4u" style="max-width: 150px; margin-bottom: 30px;">
                                 <h2>Rejoignez Photo4u</h2>
                                 <p class="mb-4">La plateforme qui connecte photographes et passionnés de photographie</p>
                                 
