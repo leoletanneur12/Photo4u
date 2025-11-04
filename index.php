@@ -83,8 +83,7 @@ $user = getCurrentUser();
         <div class="container hero-content">
             <div class="row align-items-center">
                 <div class="col-lg-8 mx-auto text-center">
-                    <img src="images/logo.svg" alt="PhotoFor You" class="hero-logo mb-4 animate-fade-in">
-                    <h1 class="display-4 text-white mb-3 animate-fade-in">PhotoFor You</h1>
+                    <h1 class="display-4 text-white mb-3 animate-fade-in">PhotoForYou</h1>
                     <p class="lead text-white mb-4 animate-fade-in">Que vous soyez un particulier ou une entreprise, nous immortalisons vos moments précieux</p>
                     
                     <?php if (!isLoggedIn()): ?>
