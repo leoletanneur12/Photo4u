@@ -1,72 +1,66 @@
-# Photo4u - Site de Photographie Professionnel# Photo4u - Site Web Professionnel
+# Photo4u - Site de Photographie Professionnel
 
+Site web complet de photographie avec système d'authentification multi-rôles, gestion de crédits et marketplace de photos.
 
+## 🚀 Fonctionnalités
 
-Site web complet de photographie avec système d'authentification multi-rôles utilisant PHP, MySQL, Bootstrap 5 et JavaScript.Un site web moderne et responsive pour Photo4u, votre photographe professionnel.
+### Système d'authentification
+- **4 niveaux d'accès** : Visiteur, Client, Photographe, Admin
+- **Sessions PHP** sécurisées avec bcrypt
+- Inscription avec choix du rôle (Client ou Photographe)
+- Connexion et déconnexion
 
+### � Système de Crédits (Nouveau!)
+- Recharge de crédits entre 5€ et 500€
+- Paiement sécurisé des photos avec crédits
+- Historique des transactions
+- Solde affiché en temps réel
 
+### Par rôle
 
-## 🚀 Fonctionnalités## 🚀 Fonctionnalités
+#### 👁️ Visiteur (non connecté)
+- Aperçu flou des photos (effet blur)
+- Accès à la page d'accueil et tarifs
+- Formulaire de contact
+- Peut s'inscrire comme Client ou Photographe
 
+#### 👤 Client
+- **Système de crédits rechargeable** (5€ - 500€)
+- Parcourir toutes les photos par catégorie
+- Acheter des photos avec ses crédits
+- Télécharger les photos achetées
+- Dashboard personnel avec :
+  - Solde de crédits
+  - Historique des achats
+  - Total dépensé
+  - Bouton de recharge de crédits
 
+#### 📷 Photographe
+- **Accès UNIQUEMENT à ses propres photos** (pas d'achat possible)
+- Upload et gestion de ses photos
+- Création de catégories personnalisées avec icônes
+- Définition des prix par photo
+- Statistiques :
+  - Nombre de photos publiées
+  - Nombre de ventes
+  - Revenus totaux
+- ⚠️ **Pour acheter des photos d'autres photographes, doit créer un compte Client**
 
-### Système d'authentification- ✨ Design moderne et élégant avec Bootstrap 5
+#### 🔧 Administrateur
+- Vue complète du système
+- Gestion des utilisateurs
+- Gestion de toutes les photos
+- Statistiques globales (utilisateurs, photos, revenus)
+- Vue sur tous les achats
 
-- **3 niveaux d'accès** : Visiteur, Client, Photographe, Admin- 📱 Totalement responsive (mobile, tablette, desktop)
+## 📁 Structure du Projet
 
-- **Sessions PHP** sécurisées- 🎨 Animations fluides et effets visuels
-
-- Inscription et connexion- 🖼️ Galerie de photos interactive
-
-- Gestion des rôles- 💳 Section tarifs avec 3 formules
-
-- 📝 Formulaires de contact et connexion
-
-### Par rôle- 🎯 Navigation smooth scroll
-
-- 🌟 Effets parallax sur le hero
-
-#### Visiteur (non connecté)
-
-- Accès limité au site## 📁 Structure du Projet
-
-- Vue uniquement de la page d'accueil
-
-- Boutons S'inscrire et Se connecter visibles```
-
+```
 Photo4u/
-
-#### Client│
-
-- Accès complet à la galerie├── index.html          # Page principale
-
-- Achat de photos├── css/
-
-- Téléchargement des photos achetées│   └── style.css       # Styles personnalisés
-
-- Dashboard personnel avec historique d'achats├── js/
-
-│   └── script.js       # JavaScript interactif
-
-#### Photographe├── images/
-
-- Upload de nouvelles photos│   ├── logo.png        # Votre logo Photo4u
-
-- Gestion de son portfolio (ajout/suppression)│   ├── sample1.jpg     # Image paysage
-
-- Définition des prix et catégories│   ├── sample2.jpg     # Image portrait
-
-- Dashboard avec liste de toutes ses photos│   ├── sample3.jpg     # Image événement
-
-│   ├── paysage.jpg     # Pour section formule paysages
-
-#### Administrateur│   ├── portrait.jpg    # Pour section formule portraits
-
-- Accès complet au système│   └── evenement.jpg   # Pour section formule événements
-
-- Gestion des utilisateurs (suppression)└── README.md           # Ce fichier
-
-- Gestion de toutes les photos```
+│
+├── index.php                    # Page principale avec aperçu
+├── login.php                    # Connexion
+├── register.php                 # Inscription (Client/Photographe)
 
 - Statistiques (utilisateurs, photos, revenus)
 
@@ -74,35 +68,50 @@ Photo4u/
 
 
 
-## 📋 Prérequis- **HTML5** - Structure sémantique
+├── logout.php                   # Déconnexion (redirige vers index.php)
+├── contact.php                  # Formulaire de contact
+├── config.php                   # Configuration base de données
+├── session.php                  # Gestion des sessions et authentification
+├── admin_dashboard.php          # Dashboard administrateur
+├── photographe_dashboard.php    # Dashboard photographe (photos perso uniquement)
+├── client_dashboard.php         # Dashboard client (avec système de crédits)
+├── database.sql                 # Structure de la base de données
+├── add_credits_system.sql       # Migration pour le système de crédits
+├── update_database.sql          # Mises à jour de la BDD
+├── css/
+│   └── style.css               # Styles personnalisés
+├── js/
+│   └── script.js               # Interactions JavaScript
+├── images/                      # Dossier des photos uploadées
+│   ├── logo-photo4u.svg
+│   └── ... (photos des photographes)
+└── README.md                    # Ce fichier
+```
 
-- **CSS3** - Animations et styles modernes
+## 📋 Prérequis
 
-- **WAMP/XAMPP/MAMP** (PHP 7.4+ et MySQL)- **Bootstrap 5.3.2** - Framework CSS responsive
+- **WAMP/XAMPP/MAMP** avec PHP 8.0+ et MySQL 5.7+
+- **Apache** avec mod_rewrite activé
+- **phpMyAdmin** (recommandé) ou accès MySQL en ligne de commande
+- Navigateur web moderne
 
-- Navigateur web moderne- **Bootstrap Icons** - Icônes
+## 🔧 Installation
 
-- Accès à phpMyAdmin ou ligne de commande MySQL- **JavaScript Vanilla** - Interactivité
-
-
-
-## 🔧 Installation## 🛠️ Installation et Utilisation
-
-
-
-### 1. Copier les fichiers### Option 1: Serveur Local (WAMP/XAMPP)
+### 1. Cloner ou Télécharger
 
 ```bash
+# Le projet est dans : c:\wamp64\www\Photo4u
+```
 
-# Placer le projet dans le dossier www de WAMP1. Le projet est déjà dans votre dossier WAMP: `c:\wamp64\www\Photo4u`
+### 2. Créer la base de données
 
-C:\wamp64\www\Photo4u2. Démarrez WAMP
+**Via phpMyAdmin (Recommandé) :**
+1. Ouvrez phpMyAdmin : `http://localhost/phpmyadmin`
+2. Créez une nouvelle base de données : **`photo4u`**
+3. Importez le fichier `database.sql`
+4. Importez le fichier `add_credits_system.sql` (pour le système de crédits)
 
-```3. Ouvrez votre navigateur et allez à: `http://localhost/Photo4u`
-
-
-
-### 2. Créer la base de données### Option 2: Ouvrir Directement
+**Via ligne de commande MySQL :**
 
 ```bash
 
