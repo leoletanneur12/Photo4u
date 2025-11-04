@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['email'] = $user['email'];
+                $_SESSION['credits'] = isset($user['credits']) ? (float) $user['credits'] : 0.0;
                 
                 // Redirection selon le rôle
                 switch($user['role']) {
