@@ -239,6 +239,13 @@ try {
             <div class="col-12">
                 <h1 class="mb-4"><i class="bi bi-camera-fill me-2"></i>Bienvenue, <?php echo htmlspecialchars($user['username']); ?> !</h1>
                 
+                <!-- Info pour les photographes -->
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Espace Photographe :</strong> Vous ne voyez que vos propres photos ici. 
+                    Pour acheter des photos d'autres photographes, vous devez créer un <a href="register.php" class="alert-link">compte client</a>.
+                </div>
+                
                 <?php if ($message): ?>
                     <div class="alert alert-success alert-dismissible fade show">
                         <i class="bi bi-check-circle me-2"></i><?php echo htmlspecialchars($message); ?>
