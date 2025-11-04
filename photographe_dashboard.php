@@ -17,31 +17,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_category'])) {
     
     if (!empty($name)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO categories (photographer_id, name, description, icon) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$user['id'], $name, $description, $icon]);
-            $message = "Catégorie créée avec succès !";
-        } catch(PDOException $e) {
-            if ($e->getCode() == 23000) {
+            // Vérifier si la catégorie existe déjà (globalement, pas par photographe)
+            $stmt = $pdo->prepare("SELECT id FROM categories WHERE name = ? LIMIT 1");
+            $stmt->execute([$name]);
+            
+            if ($stmt->fetch()) {
                 $error = "Cette catégorie existe déjà.";
             } else {
-                $error = "Erreur : " . $e->getMessage();
+                // Créer la catégorie (accessible à tous)
+                $stmt = $pdo->prepare("INSERT INTO categories (photographer_id, name, description, icon) VALUES (?, ?, ?, ?)");
+                $stmt->execute([NULL, $name, $description, $icon]);
+                $message = "Catégorie créée avec succès ! Elle est maintenant disponible pour tous les photographes.";
             }
+        } catch(PDOException $e) {
+            $error = "Erreur : " . $e->getMessage();
         }
     } else {
         $error = "Le nom de la catégorie est requis.";
     }
 }
 
-// Traiter la suppression de catégorie
+// Traiter la suppression de catégorie (désactivé - les catégories sont partagées)
 if (isset($_GET['delete_category'])) {
     $category_id = intval($_GET['delete_category']);
-    try {
-        $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ? AND photographer_id = ?");
-        $stmt->execute([$category_id, $user['id']]);
-        $message = "Catégorie supprimée avec succès !";
-    } catch(PDOException $e) {
-        $error = "Erreur : " . $e->getMessage();
-    }
+    $error = "Vous ne pouvez pas supprimer une catégorie car elles sont partagées entre tous les photographes.";
 }
 
 // Traiter l'ajout de photo
@@ -64,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_photo'])) {
                 
                 if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_path)) {
                     try {
-                        // Récupérer le nom de la catégorie
-                        $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ? AND photographer_id = ?");
-                        $stmt->execute([$category_id, $user['id']]);
+                        // Récupérer le nom de la catégorie (accessible à tous)
+                        $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ? LIMIT 1");
+                        $stmt->execute([$category_id]);
                         $category = $stmt->fetch();
                         
                         if ($category) {
@@ -117,10 +116,9 @@ if (isset($_GET['delete_photo'])) {
     }
 }
 
-// Récupérer les catégories du photographe
+// Récupérer toutes les catégories (partagées entre tous les photographes)
 try {
-    $stmt = $pdo->prepare("SELECT * FROM categories WHERE photographer_id = ? ORDER BY name");
-    $stmt->execute([$user['id']]);
+    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
     $categories = $stmt->fetchAll();
 } catch(PDOException $e) {
     $categories = [];
@@ -393,11 +391,11 @@ try {
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header bg-dark text-white">
-                                <h5 class="mb-0"><i class="bi bi-folder me-2"></i>Mes catégories (<?php echo count($categories); ?>)</h5>
+                                <h5 class="mb-0"><i class="bi bi-folder me-2"></i>Toutes les catégories (<?php echo count($categories); ?>)</h5>
                             </div>
                             <div class="card-body">
                                 <?php if (empty($categories)): ?>
-                                    <p class="text-muted">Aucune catégorie créée.</p>
+                                    <p class="text-muted">Aucune catégorie disponible.</p>
                                 <?php else: ?>
                                     <div class="list-group">
                                         <?php foreach ($categories as $cat): ?>
@@ -411,11 +409,9 @@ try {
                                                         <small class="text-muted"><?php echo htmlspecialchars($cat['description']); ?></small>
                                                     <?php endif; ?>
                                                 </div>
-                                                <a href="?delete_category=<?php echo $cat['id']; ?>&tab=categories" 
-                                                   class="btn btn-sm btn-outline-danger"
-                                                   onclick="return confirm('Supprimer cette catégorie ?');">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-share"></i> Partagée
+                                                </span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
