@@ -280,11 +280,12 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stats-badge">
+                <div class="stats-badge" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
                     <h3 class="h5 mb-2"><i class="bi bi-bag-check"></i> Mes achats</h3>
                     <h2 class="display-5"><?php echo $total_purchases; ?> photo(s)</h2>
                 </div>
             </div>
+            
             <div class="col-md-4">
                 <div class="stats-badge" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                     <h3 class="h5 mb-2"><i class="bi bi-graph-up"></i> Total dépensé</h3>
@@ -292,6 +293,7 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                 </div>
             </div>
         </div>
+        
 
         <!-- Onglets -->
             <li class="nav-item">
