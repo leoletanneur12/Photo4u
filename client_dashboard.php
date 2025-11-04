@@ -92,9 +92,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_photo'])) {
                     $pdo->commit();
                     $user['credits'] = $new_balance; // Mettre à jour en session
                     $_SESSION['credits'] = (float) $new_balance;
-                    $message = "Photo achetée avec succès ! Retrouvez-la dans 'Mes Achats'. Crédits restants: " . number_format($new_balance, 2) . "€";
+                    $message = "Photo achetée avec succès ! Retrouvez-la dans 'Mes Achats'. Crédits restants: " . number_format($new_balance * 100, 0) . " crédits";
                 } else {
-                    $error = "Crédits insuffisants. Solde: " . number_format($user['credits'], 2) . "€ - Prix: " . number_format($photo['price'], 2) . "€";
+                    $user_credits_display = number_format($user['credits'] * 100, 0);
+                    $photo_price_display = number_format($photo['price'] * 100, 0);
+                    $error = "Crédits insuffisants. Vous avez " . $user_credits_display . " crédits, cette photo coûte " . $photo_price_display . " crédits.";
                 }
             }
         }
@@ -271,7 +273,7 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
             <div class="col-md-4">
                 <div class="stats-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                     <h3 class="h5 mb-2"><i class="bi bi-wallet2"></i> Mes crédits</h3>
-                    <h2 class="display-5"><?php echo number_format($user['credits'], 2); ?>€</h2>
+                    <h2 class="display-5"><?php echo number_format($user['credits'] * 100, 0); ?> <i class="bi bi-trophy-fill" style="font-size: 1.5rem; color: #ffc107;"></i></h2>
                     <button class="btn btn-light btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#rechargeModal">
                         <i class="bi bi-plus-circle"></i> Recharger
                     </button>
@@ -285,8 +287,8 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
             </div>
             <div class="col-md-4">
                 <div class="stats-badge" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                    <h3 class="h5 mb-2"><i class="bi bi-currency-euro"></i> Total dépensé</h3>
-                    <h2 class="display-5"><?php echo number_format($total_spent, 2); ?>€</h2>
+                    <h3 class="h5 mb-2"><i class="bi bi-graph-up"></i> Total dépensé</h3>
+                    <h2 class="display-5"><?php echo number_format($total_spent * 100, 0); ?> <i class="bi bi-trophy-fill" style="font-size: 1.5rem; color: #ffc107;"></i></h2>
                 </div>
             </div>
         </div>
@@ -357,7 +359,9 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                                 <i class="<?php echo htmlspecialchars($photo['category_icon'] ?? 'bi-folder'); ?>"></i>
                                                 <?php echo htmlspecialchars($photo['category_name'] ?? $photo['category']); ?>
                                             </span>
-                                            <span class="badge bg-success"><?php echo number_format($photo['price'], 2); ?>€</span>
+                                            <span class="badge bg-success">
+                                                <?php echo number_format($photo['price'] * 100, 0); ?> <i class="bi bi-trophy-fill"></i>
+                                            </span>
                                         </div>
                                         <h5 class="card-title"><?php echo htmlspecialchars($photo['title']); ?></h5>
                                         <p class="card-text text-muted small">
@@ -375,7 +379,8 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                                             <form method="POST" class="d-inline w-100">
                                                 <input type="hidden" name="photo_id" value="<?php echo $photo['id']; ?>">
                                                 <button type="submit" name="buy_photo" class="btn btn-primary w-100">
-                                                    <i class="bi bi-cart-plus"></i> Acheter
+                                                    <i class="bi bi-cart-plus"></i> Acheter (<?php echo number_format($photo['price'] * 100, 0); ?> <i class="bi bi-trophy-fill"></i>)
+                                                </button>
                                                 </button>
                                             </form>
                                         <?php endif; ?>
