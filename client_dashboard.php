@@ -13,6 +13,41 @@ $message = '';
 $error = '';
 $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'browse';
 
+// Traiter la recharge de crédits
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recharge_credits'])) {
+    $postedAmount = $_POST['recharge_amount'] ?? $_POST['amount'] ?? null;
+    $amount = $postedAmount !== null ? floatval($postedAmount) : 0.0;
+    
+    if ($amount >= 5 && $amount <= 500) {
+        try {
+            $pdo->beginTransaction();
+            
+            // Mettre à jour les crédits
+            $stmt = $pdo->prepare("UPDATE users SET credits = credits + ? WHERE id = ?");
+            $stmt->execute([$amount, $user['id']]);
+            
+            // Récupérer le nouveau solde
+            $stmt = $pdo->prepare("SELECT credits FROM users WHERE id = ?");
+            $stmt->execute([$user['id']]);
+            $new_balance = $stmt->fetchColumn();
+            
+            // Enregistrer la transaction
+            $stmt = $pdo->prepare("INSERT INTO credit_transactions (user_id, amount, type, description, balance_after) VALUES (?, ?, 'recharge', ?, ?)");
+            $stmt->execute([$user['id'], $amount, "Recharge de crédits", $new_balance]);
+            
+            $pdo->commit();
+            $user['credits'] = $new_balance; // Mettre à jour en session
+            $_SESSION['credits'] = (float) $new_balance;
+            $message = "Recharge de " . number_format($amount, 2) . "€ effectuée avec succès !";
+        } catch(PDOException $e) {
+            $pdo->rollBack();
+            $error = "Erreur lors de la recharge : " . $e->getMessage();
+        }
+    } else {
+        $error = "Le montant doit être entre 5€ et 500€.";
+    }
+}
+
 // Traiter l'achat de photo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_photo'])) {
     $photo_id = intval($_POST['photo_id']);
@@ -30,13 +65,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_photo'])) {
             if ($stmt->fetch()) {
                 $error = "Vous possédez déjà cette photo.";
             } else {
-                // Enregistrer l'achat
-                $stmt = $pdo->prepare("INSERT INTO purchases (client_id, photo_id, price) VALUES (?, ?, ?)");
-                $stmt->execute([$user['id'], $photo_id, $photo['price']]);
-                $message = "Photo achetée avec succès ! Retrouvez-la dans 'Mes Achats'.";
+                // Vérifier si assez de crédits
+                if ($user['credits'] >= $photo['price']) {
+                    $pdo->beginTransaction();
+                    
+                    // Déduire les crédits
+                    $stmt = $pdo->prepare("UPDATE users SET credits = credits - ? WHERE id = ?");
+                    $stmt->execute([$photo['price'], $user['id']]);
+                    
+                    // Récupérer le nouveau solde
+                    $stmt = $pdo->prepare("SELECT credits FROM users WHERE id = ?");
+                    $stmt->execute([$user['id']]);
+                    $new_balance = $stmt->fetchColumn();
+                    
+                    // Enregistrer la transaction
+                    $stmt = $pdo->prepare("INSERT INTO credit_transactions (user_id, amount, type, description, balance_after) VALUES (?, ?, 'purchase', ?, ?)");
+                    $stmt->execute([$user['id'], -$photo['price'], "Achat photo: " . $photo['title'], $new_balance]);
+                    
+                    // Enregistrer l'achat
+                    $stmt = $pdo->prepare("INSERT INTO purchases (client_id, photo_id, price) VALUES (?, ?, ?)");
+                    $stmt->execute([$user['id'], $photo_id, $photo['price']]);
+                    
+                    $pdo->commit();
+                    $user['credits'] = $new_balance; // Mettre à jour en session
+                    $_SESSION['credits'] = (float) $new_balance;
+                    $message = "Photo achetée avec succès ! Retrouvez-la dans 'Mes Achats'. Crédits restants: " . number_format($new_balance, 2) . "€";
+                } else {
+                    $error = "Crédits insuffisants. Solde: " . number_format($user['credits'], 2) . "€ - Prix: " . number_format($photo['price'], 2) . "€";
+                }
             }
         }
     } catch(PDOException $e) {
+        if (isset($pdo) && $pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         $error = "Erreur : " . $e->getMessage();
     }
 }
@@ -203,13 +265,22 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
 
         <!-- Statistiques -->
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
+                <div class="stats-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <h3 class="h5 mb-2"><i class="bi bi-wallet2"></i> Mes crédits</h3>
+                    <h2 class="display-5"><?php echo number_format($user['credits'], 2); ?>€</h2>
+                    <button class="btn btn-light btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#rechargeModal">
+                        <i class="bi bi-plus-circle"></i> Recharger
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="stats-badge">
                     <h3 class="h5 mb-2"><i class="bi bi-bag-check"></i> Mes achats</h3>
                     <h2 class="display-5"><?php echo $total_purchases; ?> photo(s)</h2>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="stats-badge" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                     <h3 class="h5 mb-2"><i class="bi bi-currency-euro"></i> Total dépensé</h3>
                     <h2 class="display-5"><?php echo number_format($total_spent, 2); ?>€</h2>
@@ -359,6 +430,41 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Modal de recharge des crédits -->
+    <div class="modal fade" id="rechargeModal" tabindex="-1" aria-labelledby="rechargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rechargeModalLabel">
+                        <i class="bi bi-wallet2"></i> Recharger mes crédits
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="recharge_amount" class="form-label">Montant à recharger (€)</label>
+                            <input type="number" class="form-control" id="recharge_amount" name="recharge_amount" 
+                                   min="5" max="500" step="0.01" required
+                                   placeholder="Entrez un montant entre 5€ et 500€">
+                            <div class="form-text">Montant minimum : 5€ | Montant maximum : 500€</div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 
+                            <strong>Information :</strong> Les crédits seront ajoutés immédiatement à votre compte après validation.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" name="recharge_credits" class="btn btn-primary">
+                            <i class="bi bi-credit-card"></i> Valider la recharge
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
