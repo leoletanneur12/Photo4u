@@ -435,38 +435,257 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
 
     <!-- Modal de recharge des crédits -->
     <div class="modal fade" id="rechargeModal" tabindex="-1" aria-labelledby="rechargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="rechargeModalLabel">
-                        <i class="bi bi-wallet2"></i> Recharger mes crédits
+                        <i class="bi bi-wallet2 me-2"></i> Recharger mes crédits
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="recharge_amount" class="form-label">Montant à recharger (€)</label>
-                            <input type="number" class="form-control" id="recharge_amount" name="recharge_amount" 
-                                   min="5" max="500" step="0.01" required
-                                   placeholder="Entrez un montant entre 5€ et 500€">
-                            <div class="form-text">Montant minimum : 5€ | Montant maximum : 500€</div>
+                <div class="modal-body p-4">
+                    <p class="text-center text-muted mb-4">Choisissez le montant de crédits à ajouter à votre compte</p>
+                    
+                    <form method="POST" action="" id="rechargeForm">
+                        <div class="row g-3">
+                            <!-- 5€ -->
+                            <div class="col-md-4">
+                                <label class="credit-pack-card">
+                                    <input type="radio" name="recharge_amount" value="5" required>
+                                    <div class="credit-pack-content">
+                                        <div class="credit-icon">
+                                            <i class="bi bi-coin"></i>
+                                        </div>
+                                        <div class="credit-amount">5€</div>
+                                        <div class="credit-desc">Débutant</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- 10€ -->
+                            <div class="col-md-4">
+                                <label class="credit-pack-card">
+                                    <input type="radio" name="recharge_amount" value="10" required>
+                                    <div class="credit-pack-content">
+                                        <div class="credit-icon">
+                                            <i class="bi bi-cash-coin"></i>
+                                        </div>
+                                        <div class="credit-amount">10€</div>
+                                        <div class="credit-desc">Standard</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- 25€ -->
+                            <div class="col-md-4">
+                                <label class="credit-pack-card credit-popular">
+                                    <input type="radio" name="recharge_amount" value="25" required>
+                                    <div class="credit-pack-content">
+                                        <span class="badge-popular-small">Populaire</span>
+                                        <div class="credit-icon">
+                                            <i class="bi bi-gem"></i>
+                                        </div>
+                                        <div class="credit-amount">25€</div>
+                                        <div class="credit-desc">Populaire</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- 35€ -->
+                            <div class="col-md-4">
+                                <label class="credit-pack-card">
+                                    <input type="radio" name="recharge_amount" value="35" required>
+                                    <div class="credit-pack-content">
+                                        <div class="credit-icon">
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                        <div class="credit-amount">35€</div>
+                                        <div class="credit-desc">Avancé</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- 50€ -->
+                            <div class="col-md-4">
+                                <label class="credit-pack-card">
+                                    <input type="radio" name="recharge_amount" value="50" required>
+                                    <div class="credit-pack-content">
+                                        <div class="credit-icon">
+                                            <i class="bi bi-trophy-fill"></i>
+                                        </div>
+                                        <div class="credit-amount">50€</div>
+                                        <div class="credit-desc">Pro</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- 75€ -->
+                            <div class="col-md-4">
+                                <label class="credit-pack-card">
+                                    <input type="radio" name="recharge_amount" value="75" required>
+                                    <div class="credit-pack-content">
+                                        <div class="credit-icon">
+                                            <i class="bi bi-lightning-charge-fill"></i>
+                                        </div>
+                                        <div class="credit-amount">75€</div>
+                                        <div class="credit-desc">Expert</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- 100€ -->
+                            <div class="col-md-12">
+                                <label class="credit-pack-card credit-premium">
+                                    <input type="radio" name="recharge_amount" value="100" required>
+                                    <div class="credit-pack-content-large">
+                                        <span class="badge-premium">Meilleure valeur</span>
+                                        <div class="credit-icon-large">
+                                            <i class="bi bi-award-fill"></i>
+                                        </div>
+                                        <div class="credit-amount-large">100€</div>
+                                        <div class="credit-desc-large">Pack Premium - Le meilleur rapport qualité/prix</div>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> 
-                            <strong>Information :</strong> Les crédits seront ajoutés immédiatement à votre compte après validation.
+                        
+                        <div class="alert alert-info mt-4 mb-0">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Paiement sécurisé :</strong> Les crédits seront ajoutés immédiatement après validation.
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" name="recharge_credits" class="btn btn-primary">
-                            <i class="bi bi-credit-card"></i> Valider la recharge
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Annuler
+                    </button>
+                    <button type="submit" form="rechargeForm" name="recharge_credits" class="btn btn-primary btn-lg">
+                        <i class="bi bi-credit-card me-2"></i> Valider la recharge
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .credit-pack-card {
+            display: block;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+            height: 100%;
+        }
+        
+        .credit-pack-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .credit-pack-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .credit-pack-card input[type="radio"]:checked + .credit-pack-content,
+        .credit-pack-card input[type="radio"]:checked + .credit-pack-content-large {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .credit-pack-content {
+            transition: all 0.3s;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .credit-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .credit-pack-card input[type="radio"]:checked + .credit-pack-content .credit-icon {
+            color: white;
+        }
+        
+        .credit-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .credit-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .credit-popular {
+            border-color: #f5576c;
+        }
+        
+        .badge-popular-small {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f5576c;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .credit-premium {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .badge-premium {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ffc107;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .credit-pack-content-large {
+            transition: all 0.3s;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .credit-icon-large {
+            font-size: 4rem;
+            color: #ffc107;
+        }
+        
+        .credit-pack-card input[type="radio"]:checked + .credit-pack-content-large .credit-icon-large {
+            color: white;
+        }
+        
+        .credit-amount-large {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        
+        .credit-desc-large {
+            font-size: 1rem;
+            flex: 1;
+        }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
