@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="Photo4u PSR12">
+  <description>PSR-12 coding standard for Photo4u project.</description>
+  <file>./</file>
+  <exclude-pattern>images/*</exclude-pattern>
+  <exclude-pattern>css/*</exclude-pattern>
+  <exclude-pattern>js/*</exclude-pattern>
+  <rule ref="PSR12"/>
+</ruleset>
