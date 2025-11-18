@@ -45,7 +45,7 @@ $user = getCurrentUser();
                     </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
+                        <a class="nav-link" href="contact.php">Contact</a>
                     </li>
                 </ul>
                 <?php if (isLoggedIn()): ?>
@@ -413,12 +413,15 @@ $user = getCurrentUser();
                         <li><a href="#accueil" class="text-decoration-none text-muted hover-link">Mes promotions</a></li>
                         <li><a href="#galerie" class="text-decoration-none text-muted hover-link">Les photographies</a></li>
                         <li><a href="#tarifs" class="text-decoration-none text-muted hover-link">Notre charte qualité</a></li>
+                        <li><a href="mentions_legales.php" class="text-decoration-none text-muted hover-link">Mentions légales</a></li>
+                        <li><a href="politique_confidentialite.php" class="text-decoration-none text-muted hover-link">Politique de confidentialité</a></li>
+                        <li><a href="politique_cookies.php" class="text-decoration-none text-muted hover-link">Politique de cookies</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <h5>Aides</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#contact" class="text-decoration-none text-muted hover-link">Nous contacter</a></li>
+                        <li><a href="contact.php" class="text-decoration-none text-muted hover-link">Nous contacter</a></li>
                         <li><a href="#" class="text-decoration-none text-muted hover-link">Tuto</a></li>
                         <li><a href="#" class="text-decoration-none text-muted hover-link">Aide en ligne</a></li>
                     </ul>
