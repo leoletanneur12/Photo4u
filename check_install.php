@@ -26,7 +26,7 @@ foreach ($required_extensions as $ext) {
 }
 
 // Vérification 3: Fichiers de configuration
-$required_files = ['config.php', 'session.php', 'database.sql', 'index.php', 'login.php'];
+$required_files = ['config.php', 'session.php', 'sql/database.sql', 'index.php', 'login.php'];
 foreach ($required_files as $file) {
     if (file_exists($file)) {
         $success[] = "✅ Fichier '$file' présent";
@@ -58,7 +58,7 @@ try {
         if ($stmt->rowCount() > 0) {
             $success[] = "✅ Table '$table' existe";
         } else {
-            $errors[] = "❌ Table '$table' manquante (importer database.sql)";
+            $errors[] = "❌ Table '$table' manquante (importer sql/database.sql)";
         }
     }
 

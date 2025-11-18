@@ -37,7 +37,7 @@ try {
         echo "✅ Base de données 'photo4u' existe<br>";
     } else {
         echo "❌ Base de données 'photo4u' n'existe PAS<br>";
-        echo '<strong>Action requise :</strong> Créer la BDD et importer database.sql<br>';
+        echo '<strong>Action requise :</strong> Créer la BDD et importer sql/database.sql<br>';
     }
 } catch (PDOException $e) {
     echo '❌ Erreur MySQL: ' . $e->getMessage() . '<br>';
@@ -83,7 +83,7 @@ echo '<hr>';
 echo '<h2>🎯 Prochaines étapes</h2>';
 echo '<ol>';
 echo "<li>Si la base 'photo4u' n'existe pas : <a href='http://localhost/phpmyadmin' target='_blank'>Créer la BDD via phpMyAdmin</a></li>";
-echo '<li>Importer le fichier database.sql</li>';
+echo '<li>Importer le fichier sql/database.sql</li>';
 echo "<li>Si l'erreur persiste, renommer temporairement .htaccess</li>";
 echo "<li>Tester à nouveau : <a href='index.php'>index.php</a></li>";
 echo '</ol>';

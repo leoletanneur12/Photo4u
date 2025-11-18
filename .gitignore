@@ -1,0 +1,17 @@
+# Dependencies and build outputs
+/vendor/
+composer.phar
+
+# Environment/config (if introduced later)
+.env
+
+# IDE/editor
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache/logs (if used later)
+/var/
