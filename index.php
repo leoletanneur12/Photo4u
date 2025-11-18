@@ -400,7 +400,7 @@ $user = getCurrentUser();
     </section>
 
     <!-- Footer -->
-    <?php include 'footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 
     <!-- Modals -->
     <!-- Login Modal -->

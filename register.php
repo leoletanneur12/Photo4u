@@ -307,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
         </div>
     </div>
 
-    <?php include 'footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Script pour gérer la sélection visuelle des cartes de rôle
