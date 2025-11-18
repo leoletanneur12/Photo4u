@@ -10,19 +10,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     $email = trim($_POST['email']);
     $subject = trim($_POST['subject']);
     $message = trim($_POST['message']);
-    
+
     // Validation
     if (empty($name) || empty($email) || empty($subject) || empty($message)) {
-        $error = "Tous les champs sont requis.";
+        $error = 'Tous les champs sont requis.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Email invalide.";
+        $error = 'Email invalide.';
     } else {
         // Dans un vrai site, on enverrait un email ici
         // mail($to, $subject, $message, $headers);
-        
+
         // Pour l'instant, on simule l'envoi
-        $success = "Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.";
-        
+        $success = 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.';
+
         // Réinitialiser les champs
         $name = $email = $subject = $message = '';
     }
@@ -175,7 +175,7 @@ $user = getCurrentUser();
                                 <div class="card-body">
                                     <i class="bi bi-geo-alt-fill text-primary" style="font-size: 2rem;"></i>
                                     <h5 class="mt-3">Adresse</h5>
-                                    <p class="text-muted mb-0">123 Rue de la Photo<br>75001 Paris, France</p>
+                                    <p class="text-muted mb-0"><strong>Siège social</strong><br>36 rue Alfred de Musset<br>11802 Carcassonne, France</p>
                                 </div>
                             </div>
                         </div>
@@ -198,6 +198,27 @@ $user = getCurrentUser();
                             </div>
                         </div>
                     </div>
+
+                    <!-- Carte - Siège social -->
+                    <div class="card mt-4 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Localisation — Siège social</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div style="width: 100%; height: 380px;">
+                                <iframe
+                                    title="Carte du siège social"
+                                    width="100%"
+                                    height="100%"
+                                    style="border:0;"
+                                    loading="lazy"
+                                    allowfullscreen
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    src="https://www.google.com/maps?q=36%20rue%20Alfred%20de%20Musset%2011802%20Carcassonne&output=embed">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -217,6 +238,9 @@ $user = getCurrentUser();
                         <li><a href="index.php#accueil" class="text-decoration-none text-muted hover-link">Accueil</a></li>
                         <li><a href="index.php#galerie" class="text-decoration-none text-muted hover-link">Galerie</a></li>
                         <li><a href="index.php#tarifs" class="text-decoration-none text-muted hover-link">Tarifs</a></li>
+                        <li><a href="mentions_legales.php" class="text-decoration-none text-muted hover-link">Mentions légales</a></li>
+                        <li><a href="politique_confidentialite.php" class="text-decoration-none text-muted hover-link">Politique de confidentialité</a></li>
+                        <li><a href="politique_cookies.php" class="text-decoration-none text-muted hover-link">Politique de cookies</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">

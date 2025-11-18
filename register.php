@@ -12,34 +12,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $role = isset($_POST['role']) && in_array($_POST['role'], ['client', 'photographe']) ? $_POST['role'] : 'client';
-    
+
     // Validation
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
-        $error = "Veuillez remplir tous les champs.";
+        $error = 'Veuillez remplir tous les champs.';
     } elseif ($password !== $confirm_password) {
-        $error = "Les mots de passe ne correspondent pas.";
+        $error = 'Les mots de passe ne correspondent pas.';
     } elseif (strlen($password) < 6) {
-        $error = "Le mot de passe doit contenir au moins 6 caractères.";
+        $error = 'Le mot de passe doit contenir au moins 6 caractères.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Email invalide.";
+        $error = 'Email invalide.';
     } else {
         try {
             // Vérifier si l'utilisateur existe déjà
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+            $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ? OR email = ?');
             $stmt->execute([$username, $email]);
-            
+
             if ($stmt->fetch()) {
                 $error = "Ce nom d'utilisateur ou cet email est déjà utilisé.";
             } else {
                 // Créer le compte avec le rôle choisi
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+                $stmt = $pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
                 $stmt->execute([$username, $email, $hashed_password, $role]);
-                
-                $success = "Compte créé avec succès ! Vous pouvez maintenant vous connecter.";
+
+                $success = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
             }
-        } catch(PDOException $e) {
-            $error = "Erreur : " . $e->getMessage();
+        } catch (PDOException $e) {
+            $error = 'Erreur : ' . $e->getMessage();
         }
     }
 }

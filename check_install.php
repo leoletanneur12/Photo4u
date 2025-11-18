@@ -10,9 +10,9 @@ $success = [];
 
 // Vérification 1: Version PHP
 if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
-    $success[] = "✅ PHP version " . PHP_VERSION . " (OK)";
+    $success[] = '✅ PHP version ' . PHP_VERSION . ' (OK)';
 } else {
-    $errors[] = "❌ PHP version " . PHP_VERSION . " (minimum 7.4 requis)";
+    $errors[] = '❌ PHP version ' . PHP_VERSION . ' (minimum 7.4 requis)';
 }
 
 // Vérification 2: Extensions PHP
@@ -49,8 +49,8 @@ if (is_dir('images')) {
 // Vérification 5: Connexion à la base de données
 try {
     require_once 'config.php';
-    $success[] = "✅ Connexion à la base de données réussie";
-    
+    $success[] = '✅ Connexion à la base de données réussie';
+
     // Vérifier les tables
     $tables = ['users', 'photos', 'purchases'];
     foreach ($tables as $table) {
@@ -61,7 +61,7 @@ try {
             $errors[] = "❌ Table '$table' manquante (importer database.sql)";
         }
     }
-    
+
     // Vérifier les comptes de test
     $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE username IN ('admin', 'photo', 'leo')");
     $count = $stmt->fetchColumn();
@@ -70,9 +70,9 @@ try {
     } else {
         $warnings[] = "⚠️ Comptes de test incomplets ($count/3)";
     }
-    
-} catch(Exception $e) {
-    $errors[] = "❌ Erreur de connexion BDD: " . $e->getMessage();
+
+} catch (Exception $e) {
+    $errors[] = '❌ Erreur de connexion BDD: ' . $e->getMessage();
     $warnings[] = "⚠️ Vérifiez config.php et assurez-vous que la BDD 'photo4u' existe";
 }
 

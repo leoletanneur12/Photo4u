@@ -1,16 +1,19 @@
 <?php
+
 // Démarrer la session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 // Vérifier si l'utilisateur est connecté
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']);
 }
 
 // Obtenir l'utilisateur actuel
-function getCurrentUser() {
+function getCurrentUser()
+{
     if (!isLoggedIn()) {
         return null;
     }
@@ -41,7 +44,7 @@ function getCurrentUser() {
 
     if (isset($pdo)) {
         try {
-            $stmt = $pdo->prepare("SELECT email, credits FROM users WHERE id = ? LIMIT 1");
+            $stmt = $pdo->prepare('SELECT email, credits FROM users WHERE id = ? LIMIT 1');
             $stmt->execute([$user['id']]);
             if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $user['email'] = $row['email'];
@@ -65,27 +68,32 @@ function getCurrentUser() {
 }
 
 // Vérifier le rôle de l'utilisateur
-function hasRole($role) {
+function hasRole($role)
+{
     return isLoggedIn() && $_SESSION['role'] === $role;
 }
 
 // Vérifier si l'utilisateur est admin
-function isAdmin() {
+function isAdmin()
+{
     return hasRole('admin');
 }
 
 // Vérifier si l'utilisateur est photographe
-function isPhotographe() {
+function isPhotographe()
+{
     return hasRole('photographe');
 }
 
 // Vérifier si l'utilisateur est client
-function isClient() {
+function isClient()
+{
     return hasRole('client');
 }
 
 // Rediriger si non connecté
-function requireLogin() {
+function requireLogin()
+{
     if (!isLoggedIn()) {
         header('Location: login.php');
         exit();
@@ -93,7 +101,8 @@ function requireLogin() {
 }
 
 // Rediriger si non admin
-function requireAdmin() {
+function requireAdmin()
+{
     requireLogin();
     if (!isAdmin()) {
         header('Location: index.php');
@@ -102,7 +111,8 @@ function requireAdmin() {
 }
 
 // Rediriger si non photographe
-function requirePhotographe() {
+function requirePhotographe()
+{
     requireLogin();
     if (!isPhotographe() && !isAdmin()) {
         header('Location: index.php');
@@ -111,11 +121,11 @@ function requirePhotographe() {
 }
 
 // Déconnexion
-function logout() {
-    $_SESSION = array();
+function logout()
+{
+    $_SESSION = [];
     if (isset($_COOKIE[session_name()])) {
-        setcookie(session_name(), '', time()-3600, '/');
+        setcookie(session_name(), '', time() - 3600, '/');
     }
     session_destroy();
 }
-?>

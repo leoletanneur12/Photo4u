@@ -17,94 +17,94 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'browse';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recharge_credits'])) {
     $postedAmount = $_POST['recharge_amount'] ?? $_POST['amount'] ?? null;
     $amount = $postedAmount !== null ? floatval($postedAmount) : 0.0;
-    
+
     if ($amount >= 5 && $amount <= 500) {
         try {
             $pdo->beginTransaction();
-            
+
             // Calculer les crédits (1€ = 100 crédits)
             $credits = $amount * 100;
-            
+
             // Mettre à jour les crédits
-            $stmt = $pdo->prepare("UPDATE users SET credits = credits + ? WHERE id = ?");
+            $stmt = $pdo->prepare('UPDATE users SET credits = credits + ? WHERE id = ?');
             $stmt->execute([$amount, $user['id']]);
-            
+
             // Récupérer le nouveau solde
-            $stmt = $pdo->prepare("SELECT credits FROM users WHERE id = ?");
+            $stmt = $pdo->prepare('SELECT credits FROM users WHERE id = ?');
             $stmt->execute([$user['id']]);
             $new_balance = $stmt->fetchColumn();
-            
+
             // Enregistrer la transaction
             $stmt = $pdo->prepare("INSERT INTO credit_transactions (user_id, amount, type, description, balance_after) VALUES (?, ?, 'recharge', ?, ?)");
-            $stmt->execute([$user['id'], $amount, "Recharge de " . number_format($credits, 0) . " crédits", $new_balance]);
-            
+            $stmt->execute([$user['id'], $amount, 'Recharge de ' . number_format($credits, 0) . ' crédits', $new_balance]);
+
             $pdo->commit();
             $user['credits'] = $new_balance; // Mettre à jour en session
             $_SESSION['credits'] = (float) $new_balance;
-            $message = "✅ Recharge réussie ! Vous avez reçu " . number_format($credits, 0) . " crédits pour " . number_format($amount, 2) . "€";
-        } catch(PDOException $e) {
+            $message = '✅ Recharge réussie ! Vous avez reçu ' . number_format($credits, 0) . ' crédits pour ' . number_format($amount, 2) . '€';
+        } catch (PDOException $e) {
             $pdo->rollBack();
-            $error = "Erreur lors de la recharge : " . $e->getMessage();
+            $error = 'Erreur lors de la recharge : ' . $e->getMessage();
         }
     } else {
-        $error = "Le montant doit être entre 5€ et 500€.";
+        $error = 'Le montant doit être entre 5€ et 500€.';
     }
 }
 
 // Traiter l'achat de photo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_photo'])) {
     $photo_id = intval($_POST['photo_id']);
-    
+
     try {
-        $stmt = $pdo->prepare("SELECT * FROM photos WHERE id = ?");
+        $stmt = $pdo->prepare('SELECT * FROM photos WHERE id = ?');
         $stmt->execute([$photo_id]);
         $photo = $stmt->fetch();
-        
+
         if ($photo) {
             // Vérifier si déjà acheté
-            $stmt = $pdo->prepare("SELECT * FROM purchases WHERE client_id = ? AND photo_id = ?");
+            $stmt = $pdo->prepare('SELECT * FROM purchases WHERE client_id = ? AND photo_id = ?');
             $stmt->execute([$user['id'], $photo_id]);
-            
+
             if ($stmt->fetch()) {
-                $error = "Vous possédez déjà cette photo.";
+                $error = 'Vous possédez déjà cette photo.';
             } else {
                 // Vérifier si assez de crédits
                 if ($user['credits'] >= $photo['price']) {
                     $pdo->beginTransaction();
-                    
+
                     // Déduire les crédits
-                    $stmt = $pdo->prepare("UPDATE users SET credits = credits - ? WHERE id = ?");
+                    $stmt = $pdo->prepare('UPDATE users SET credits = credits - ? WHERE id = ?');
                     $stmt->execute([$photo['price'], $user['id']]);
-                    
+
                     // Récupérer le nouveau solde
-                    $stmt = $pdo->prepare("SELECT credits FROM users WHERE id = ?");
+                    $stmt = $pdo->prepare('SELECT credits FROM users WHERE id = ?');
                     $stmt->execute([$user['id']]);
                     $new_balance = $stmt->fetchColumn();
-                    
+
                     // Enregistrer la transaction
                     $stmt = $pdo->prepare("INSERT INTO credit_transactions (user_id, amount, type, description, balance_after) VALUES (?, ?, 'purchase', ?, ?)");
-                    $stmt->execute([$user['id'], -$photo['price'], "Achat photo: " . $photo['title'], $new_balance]);
-                    
+                    $stmt->execute([$user['id'], -$photo['price'], 'Achat photo: ' . $photo['title'], $new_balance]);
+
                     // Enregistrer l'achat
-                    $stmt = $pdo->prepare("INSERT INTO purchases (client_id, photo_id, price) VALUES (?, ?, ?)");
+                    $stmt = $pdo->prepare('INSERT INTO purchases (client_id, photo_id, price) VALUES (?, ?, ?)');
                     $stmt->execute([$user['id'], $photo_id, $photo['price']]);
-                    
+
                     $pdo->commit();
                     $user['credits'] = $new_balance; // Mettre à jour en session
                     $_SESSION['credits'] = (float) $new_balance;
-                    $message = "Photo achetée avec succès ! Retrouvez-la dans 'Mes Achats'. Crédits restants: " . number_format($new_balance * 100, 0) . " crédits";
+                    $message = "Photo achetée avec succès ! Retrouvez-la dans 'Mes Achats'. Crédits restants: " . number_format($new_balance * 100, 0) . ' crédits';
                 } else {
                     $user_credits_display = number_format($user['credits'] * 100, 0);
                     $photo_price_display = number_format($photo['price'] * 100, 0);
-                    $error = "Crédits insuffisants. Vous avez " . $user_credits_display . " crédits, cette photo coûte " . $photo_price_display . " crédits.";
+                    $error = 'Crédits insuffisants. Vous avez ' . $user_credits_display . ' crédits, cette photo coûte ' . $photo_price_display . ' crédits.';
                 }
             }
         }
-    } catch(PDOException $e) {
+    } catch (PDOException $e) {
         if (isset($pdo) && $pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        $error = "Erreur : " . $e->getMessage();
+        $error = 'Erreur : ' . $e->getMessage();
     }
 }
 
@@ -112,41 +112,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_photo'])) {
 $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'all';
 try {
     if ($selectedCategory === 'all') {
-        $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare('
             SELECT p.*, u.username as photographer_name, c.name as category_name, c.icon as category_icon
             FROM photos p
             JOIN users u ON p.photographer_id = u.id
             LEFT JOIN categories c ON p.category_id = c.id
             ORDER BY p.created_at DESC
-        ");
+        ');
         $stmt->execute();
     } else {
-        $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare('
             SELECT p.*, u.username as photographer_name, c.name as category_name, c.icon as category_icon
             FROM photos p
             JOIN users u ON p.photographer_id = u.id
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE c.name = ?
             ORDER BY p.created_at DESC
-        ");
+        ');
         $stmt->execute([$selectedCategory]);
     }
     $available_photos = $stmt->fetchAll();
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $available_photos = [];
 }
 
 // Récupérer toutes les catégories disponibles
 try {
-    $stmt = $pdo->query("SELECT DISTINCT name, icon FROM categories ORDER BY name");
+    $stmt = $pdo->query('SELECT DISTINCT name, icon FROM categories ORDER BY name');
     $all_categories = $stmt->fetchAll();
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $all_categories = [];
 }
 
 // Récupérer les photos achetées
 try {
-    $stmt = $pdo->prepare("
+    $stmt = $pdo->prepare('
         SELECT p.*, ph.title, ph.description, ph.filename, ph.category, ph.price, p.purchase_date,
                u.username as photographer_name, c.name as category_name, c.icon as category_icon
         FROM purchases p
@@ -155,10 +155,10 @@ try {
         LEFT JOIN categories c ON ph.category_id = c.id
         WHERE p.client_id = ?
         ORDER BY p.purchase_date DESC
-    ");
+    ');
     $stmt->execute([$user['id']]);
     $my_purchases = $stmt->fetchAll();
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $my_purchases = [];
 }
 
@@ -342,7 +342,7 @@ $total_spent = array_sum(array_column($my_purchases, 'price'));
                             </div>
                         </div>
                     <?php else: ?>
-                        <?php 
+                        <?php
                         // Vérifier quelles photos sont déjà achetées
                         $purchased_ids = array_column($my_purchases, 'photo_id');
                         ?>

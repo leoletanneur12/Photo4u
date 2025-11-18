@@ -9,15 +9,15 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    
+
     if (empty($username) || empty($password)) {
-        $error = "Veuillez remplir tous les champs.";
+        $error = 'Veuillez remplir tous les champs.';
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
             $stmt->execute([$username]);
             $user = $stmt->fetch();
-            
+
             if ($user && password_verify($password, $user['password'])) {
                 // Connexion réussie
                 $_SESSION['user_id'] = $user['id'];
@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['credits'] = isset($user['credits']) ? (float) $user['credits'] : 0.0;
-                
+
                 // Redirection selon le rôle
-                switch($user['role']) {
+                switch ($user['role']) {
                     case 'admin':
                         header('Location: admin_dashboard.php');
                         break;
@@ -42,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 }
                 exit();
             } else {
-                $error = "Identifiants incorrects.";
+                $error = 'Identifiants incorrects.';
             }
-        } catch(PDOException $e) {
-            $error = "Erreur : " . $e->getMessage();
+        } catch (PDOException $e) {
+            $error = 'Erreur : ' . $e->getMessage();
         }
     }
 }
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 // Si déjà connecté, rediriger
 if (isLoggedIn()) {
     $role = $_SESSION['role'];
-    switch($role) {
+    switch ($role) {
         case 'admin':
             header('Location: admin_dashboard.php');
             break;

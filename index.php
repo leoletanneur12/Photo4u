@@ -296,7 +296,7 @@ $user = getCurrentUser();
         </div>
     </section>
 
-    <?php endif; // Fin de isLoggedIn() pour formules ?>
+    <?php endif; // Fin de isLoggedIn() pour formules?>
 
     <!-- Tarifs Section - VISIBLE POUR TOUS -->
     <section id="tarifs" class="tarifs-section py-5 bg-light">

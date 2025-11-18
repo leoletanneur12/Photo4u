@@ -13,14 +13,14 @@ if (isset($_GET['delete_user'])) {
     $user_id = intval($_GET['delete_user']);
     if ($user_id != $user['id']) { // Ne pas pouvoir se supprimer soi-même
         try {
-            $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+            $stmt = $pdo->prepare('DELETE FROM users WHERE id = ?');
             $stmt->execute([$user_id]);
-            $message = "Utilisateur supprimé avec succès !";
-        } catch(PDOException $e) {
-            $error = "Erreur : " . $e->getMessage();
+            $message = 'Utilisateur supprimé avec succès !';
+        } catch (PDOException $e) {
+            $error = 'Erreur : ' . $e->getMessage();
         }
     } else {
-        $error = "Vous ne pouvez pas supprimer votre propre compte.";
+        $error = 'Vous ne pouvez pas supprimer votre propre compte.';
     }
 }
 
@@ -28,53 +28,53 @@ if (isset($_GET['delete_user'])) {
 if (isset($_GET['delete_photo'])) {
     $photo_id = intval($_GET['delete_photo']);
     try {
-        $stmt = $pdo->prepare("SELECT filename FROM photos WHERE id = ?");
+        $stmt = $pdo->prepare('SELECT filename FROM photos WHERE id = ?');
         $stmt->execute([$photo_id]);
         $photo = $stmt->fetch();
-        
+
         if ($photo && file_exists('images/' . $photo['filename'])) {
             unlink('images/' . $photo['filename']);
         }
-        
-        $stmt = $pdo->prepare("DELETE FROM photos WHERE id = ?");
+
+        $stmt = $pdo->prepare('DELETE FROM photos WHERE id = ?');
         $stmt->execute([$photo_id]);
-        $message = "Photo supprimée avec succès !";
-    } catch(PDOException $e) {
-        $error = "Erreur : " . $e->getMessage();
+        $message = 'Photo supprimée avec succès !';
+    } catch (PDOException $e) {
+        $error = 'Erreur : ' . $e->getMessage();
     }
 }
 
 // Récupérer les statistiques
 try {
     $stats = [];
-    $stats['total_users'] = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
-    $stats['total_photos'] = $pdo->query("SELECT COUNT(*) FROM photos")->fetchColumn();
-    $stats['total_purchases'] = $pdo->query("SELECT COUNT(*) FROM purchases")->fetchColumn();
-    $stats['total_revenue'] = $pdo->query("SELECT SUM(price) FROM purchases")->fetchColumn() ?? 0;
-    
+    $stats['total_users'] = $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
+    $stats['total_photos'] = $pdo->query('SELECT COUNT(*) FROM photos')->fetchColumn();
+    $stats['total_purchases'] = $pdo->query('SELECT COUNT(*) FROM purchases')->fetchColumn();
+    $stats['total_revenue'] = $pdo->query('SELECT SUM(price) FROM purchases')->fetchColumn() ?? 0;
+
     // Récupérer tous les utilisateurs
-    $users = $pdo->query("SELECT * FROM users ORDER BY created_at DESC")->fetchAll();
-    
+    $users = $pdo->query('SELECT * FROM users ORDER BY created_at DESC')->fetchAll();
+
     // Récupérer toutes les photos
-    $photos = $pdo->query("
+    $photos = $pdo->query('
         SELECT ph.*, u.username as photographer_name
         FROM photos ph
         JOIN users u ON ph.photographer_id = u.id
         ORDER BY ph.created_at DESC
-    ")->fetchAll();
-    
+    ')->fetchAll();
+
     // Récupérer tous les achats
-    $purchases = $pdo->query("
+    $purchases = $pdo->query('
         SELECT p.*, u.username as client_name, ph.title as photo_title, ph.filename
         FROM purchases p
         JOIN users u ON p.client_id = u.id
         JOIN photos ph ON p.photo_id = ph.id
         ORDER BY p.purchase_date DESC
         LIMIT 10
-    ")->fetchAll();
-    
-} catch(PDOException $e) {
-    $error = "Erreur : " . $e->getMessage();
+    ')->fetchAll();
+
+} catch (PDOException $e) {
+    $error = 'Erreur : ' . $e->getMessage();
     $users = [];
     $photos = [];
     $purchases = [];
@@ -227,10 +227,10 @@ try {
                                     <td><?php echo htmlspecialchars($u['username']); ?></td>
                                     <td><?php echo htmlspecialchars($u['email']); ?></td>
                                     <td>
-                                        <span class="badge bg-<?php 
-                                            echo $u['role'] === 'admin' ? 'danger' : 
-                                                ($u['role'] === 'photographe' ? 'warning' : 'primary'); 
-                                        ?>"><?php echo ucfirst($u['role']); ?></span>
+                                        <span class="badge bg-<?php
+                                            echo $u['role'] === 'admin' ? 'danger' :
+                                                ($u['role'] === 'photographe' ? 'warning' : 'primary');
+                                ?>"><?php echo ucfirst($u['role']); ?></span>
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($u['created_at'])); ?></td>
                                     <td>

@@ -14,33 +14,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_category'])) {
     $name = trim($_POST['category_name']);
     $description = trim($_POST['category_description']);
     $icon = trim($_POST['category_icon']);
-    
+
     if (!empty($name)) {
         try {
             // Vérifier si la catégorie existe déjà (globalement, pas par photographe)
-            $stmt = $pdo->prepare("SELECT id FROM categories WHERE name = ? LIMIT 1");
+            $stmt = $pdo->prepare('SELECT id FROM categories WHERE name = ? LIMIT 1');
             $stmt->execute([$name]);
-            
+
             if ($stmt->fetch()) {
-                $error = "Cette catégorie existe déjà.";
+                $error = 'Cette catégorie existe déjà.';
             } else {
                 // Créer la catégorie (accessible à tous)
-                $stmt = $pdo->prepare("INSERT INTO categories (photographer_id, name, description, icon) VALUES (?, ?, ?, ?)");
-                $stmt->execute([NULL, $name, $description, $icon]);
-                $message = "Catégorie créée avec succès ! Elle est maintenant disponible pour tous les photographes.";
+                $stmt = $pdo->prepare('INSERT INTO categories (photographer_id, name, description, icon) VALUES (?, ?, ?, ?)');
+                $stmt->execute([null, $name, $description, $icon]);
+                $message = 'Catégorie créée avec succès ! Elle est maintenant disponible pour tous les photographes.';
             }
-        } catch(PDOException $e) {
-            $error = "Erreur : " . $e->getMessage();
+        } catch (PDOException $e) {
+            $error = 'Erreur : ' . $e->getMessage();
         }
     } else {
-        $error = "Le nom de la catégorie est requis.";
+        $error = 'Le nom de la catégorie est requis.';
     }
 }
 
 // Traiter la suppression de catégorie (désactivé - les catégories sont partagées)
 if (isset($_GET['delete_category'])) {
     $category_id = intval($_GET['delete_category']);
-    $error = "Vous ne pouvez pas supprimer une catégorie car elles sont partagées entre tous les photographes.";
+    $error = 'Vous ne pouvez pas supprimer une catégorie car elles sont partagées entre tous les photographes.';
 }
 
 // Traiter l'ajout de photo
@@ -49,48 +49,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_photo'])) {
     $description = trim($_POST['description']);
     $category_id = intval($_POST['category_id']);
     $price = floatval($_POST['price']);
-    
+
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $filename = $_FILES['photo']['name'];
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
+
         if (in_array($ext, $allowed)) {
             // Vérifier la taille du fichier (max 5MB)
             if ($_FILES['photo']['size'] <= 5 * 1024 * 1024) {
                 $new_filename = uniqid() . '_' . time() . '.' . $ext;
                 $upload_path = 'images/' . $new_filename;
-                
+
                 if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_path)) {
                     try {
                         // Récupérer le nom de la catégorie (accessible à tous)
-                        $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ? LIMIT 1");
+                        $stmt = $pdo->prepare('SELECT name FROM categories WHERE id = ? LIMIT 1');
                         $stmt->execute([$category_id]);
                         $category = $stmt->fetch();
-                        
+
                         if ($category) {
-                            $stmt = $pdo->prepare("INSERT INTO photos (photographer_id, title, description, filename, category, category_id, price) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                            $stmt = $pdo->prepare('INSERT INTO photos (photographer_id, title, description, filename, category, category_id, price) VALUES (?, ?, ?, ?, ?, ?, ?)');
                             $stmt->execute([$user['id'], $title, $description, $new_filename, $category['name'], $category_id, $price]);
-                            $message = "Photo ajoutée avec succès !";
+                            $message = 'Photo ajoutée avec succès !';
                         } else {
-                            $error = "Catégorie invalide.";
+                            $error = 'Catégorie invalide.';
                             unlink($upload_path);
                         }
-                    } catch(PDOException $e) {
-                        $error = "Erreur : " . $e->getMessage();
+                    } catch (PDOException $e) {
+                        $error = 'Erreur : ' . $e->getMessage();
                         unlink($upload_path);
                     }
                 } else {
                     $error = "Erreur lors de l'upload du fichier.";
                 }
             } else {
-                $error = "Le fichier est trop volumineux (max 5MB).";
+                $error = 'Le fichier est trop volumineux (max 5MB).';
             }
         } else {
-            $error = "Format de fichier non autorisé. Formats acceptés : JPG, PNG, GIF, WEBP";
+            $error = 'Format de fichier non autorisé. Formats acceptés : JPG, PNG, GIF, WEBP';
         }
     } else {
-        $error = "Veuillez sélectionner une photo.";
+        $error = 'Veuillez sélectionner une photo.';
     }
 }
 
@@ -98,45 +98,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_photo'])) {
 if (isset($_GET['delete_photo'])) {
     $photo_id = intval($_GET['delete_photo']);
     try {
-        $stmt = $pdo->prepare("SELECT filename FROM photos WHERE id = ? AND photographer_id = ?");
+        $stmt = $pdo->prepare('SELECT filename FROM photos WHERE id = ? AND photographer_id = ?');
         $stmt->execute([$photo_id, $user['id']]);
         $photo = $stmt->fetch();
-        
+
         if ($photo) {
-            $stmt = $pdo->prepare("DELETE FROM photos WHERE id = ? AND photographer_id = ?");
+            $stmt = $pdo->prepare('DELETE FROM photos WHERE id = ? AND photographer_id = ?');
             $stmt->execute([$photo_id, $user['id']]);
-            
+
             if (file_exists('images/' . $photo['filename'])) {
                 unlink('images/' . $photo['filename']);
             }
-            $message = "Photo supprimée avec succès !";
+            $message = 'Photo supprimée avec succès !';
         }
-    } catch(PDOException $e) {
-        $error = "Erreur : " . $e->getMessage();
+    } catch (PDOException $e) {
+        $error = 'Erreur : ' . $e->getMessage();
     }
 }
 
 // Récupérer toutes les catégories (partagées entre tous les photographes)
 try {
-    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+    $stmt = $pdo->query('SELECT * FROM categories ORDER BY name');
     $categories = $stmt->fetchAll();
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $categories = [];
 }
 
 // Récupérer les photos du photographe
 try {
-    $stmt = $pdo->prepare("
+    $stmt = $pdo->prepare('
         SELECT p.*, c.name as category_name, c.icon as category_icon,
                (SELECT COUNT(*) FROM purchases WHERE photo_id = p.id) as sales_count
         FROM photos p
         LEFT JOIN categories c ON p.category_id = c.id
         WHERE p.photographer_id = ?
         ORDER BY p.created_at DESC
-    ");
+    ');
     $stmt->execute([$user['id']]);
     $photos = $stmt->fetchAll();
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $photos = [];
 }
 
@@ -146,17 +146,17 @@ $total_sales = 0;
 $total_revenue = 0;
 
 try {
-    $stmt = $pdo->prepare("
+    $stmt = $pdo->prepare('
         SELECT COUNT(*) as count, SUM(pr.price) as revenue
         FROM purchases pr
         JOIN photos ph ON pr.photo_id = ph.id
         WHERE ph.photographer_id = ?
-    ");
+    ');
     $stmt->execute([$user['id']]);
     $stats = $stmt->fetch();
     $total_sales = $stats['count'] ?? 0;
     $total_revenue = $stats['revenue'] ?? 0;
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     // Ignore
 }
 ?>
