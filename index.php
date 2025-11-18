@@ -400,46 +400,7 @@ $user = getCurrentUser();
     </section>
 
     <!-- Footer -->
-    <footer class="footer bg-dark text-white py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5>© 2025 - Photo4u</h5>
-                    <p class="text-muted small">Votre photographe professionnel pour tous vos événements</p>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5>Liens</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#accueil" class="text-decoration-none text-muted hover-link">Mes promotions</a></li>
-                        <li><a href="#galerie" class="text-decoration-none text-muted hover-link">Les photographies</a></li>
-                        <li><a href="#tarifs" class="text-decoration-none text-muted hover-link">Notre charte qualité</a></li>
-                        <li><a href="mentions_legales.php" class="text-decoration-none text-muted hover-link">Mentions légales</a></li>
-                        <li><a href="politique_confidentialite.php" class="text-decoration-none text-muted hover-link">Politique de confidentialité</a></li>
-                        <li><a href="politique_cookies.php" class="text-decoration-none text-muted hover-link">Politique de cookies</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5>Aides</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="contact.php" class="text-decoration-none text-muted hover-link">Nous contacter</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted hover-link">Tuto</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted hover-link">Aide en ligne</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5>Nous connaître</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-decoration-none text-muted hover-link">Adresse</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted hover-link">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="bg-secondary">
-            <div class="text-center">
-                <p class="mb-0 text-muted">&copy; 2025 Photo4u - Tous droits réservés</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <!-- Modals -->
     <!-- Login Modal -->
